@@ -1,0 +1,105 @@
+CREATE DATABASE giftaura;
+use giftaura;
+1.Register
+CREATE table register(
+id int AUTO_INCREMENT PRIMARY KEY,
+email varchar(225),
+pass varchar(225),
+confirmpassword varchar(225)
+);
+
+2.Login
+use giftaura;
+CREATE table login(
+id int AUTO_INCREMENT PRIMARY KEY,
+email varchar(225) UNIQUE,
+pass varchar(225),
+role VARCHAR(10) NOT NULL DEFAULT 'user'
+);
+INSERT INTO login VALUES
+(0,'admin@gmail.com', 'admin', 'admin'),
+(0,'employee@gmail.com', 'employee', 'employee');
+
+3.Cards
+use giftaura;
+CREATE TABLE cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- This is used for unique increments
+    product_code CHAR(2) NOT NULL,      -- Two-letter code for the product category, type, etc.
+    unique_product_id VARCHAR(7) UNIQUE NOT NULL,  -- Final 7-digit product ID
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    stock INT DEFAULT 0,
+    image_path VARCHAR(255),
+    category VARCHAR(255),
+    ALTER TABLE cards
+    
+);
+CREATE TABLE cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(255),
+    product_id INT,
+    unique_product_id VARCHAR(255),
+    name VARCHAR(255),
+    price DECIMAL(10, 2),
+    quantity INT,
+    UNIQUE KEY unique_cart_item (user_email, product_id),
+    FOREIGN KEY (product_id) REFERENCES cards(id),
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email_address VARCHAR(255),
+    phone VARCHAR(20),
+    address TEXT,
+    city VARCHAR(255),
+    unique_order_id VARCHAR(16) UNIQUE,
+    product_name VARCHAR(255),
+    quantity INT,
+    payment_method ENUM('cod', 'online'),
+    final_price DECIMAL(10, 2),
+	order_status ENUM('Order placed', 'Out for delivery', 'Delivered', 'Order Cancelled') DEFAULT 'Order placed',
+    return_status ENUM('None', 'Requested', 'Approved', 'Declined') DEFAULT 'None',
+    feedback TEXT,
+    admin_reply TEXT
+
+);
+use giftaura;
+
+CREATE TABLE employee (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+use giftaura;
+CREATE TABLE chat_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    sender_type ENUM('user', 'bot') NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (email) REFERENCES login(email) ON DELETE CASCADE
+);
+CREATE TABLE visitor_count (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    count INT NOT NULL DEFAULT 0
+);
+
+-- Insert an initial record with count 0
+INSERT INTO visitor_count (count) VALUES (0);
+
+CREATE TABLE employee_count (
+    id INT PRIMARY KEY,
+    count INT NOT NULL
+);
+
+-- Insert an initial row to start counting
+INSERT INTO employee_count (id, count) VALUES (1, 0);
+
+
+
